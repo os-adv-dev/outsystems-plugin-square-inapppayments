@@ -41,10 +41,8 @@
 		
 		<framework src="src/ios/framework/SquareInAppPaymentsSDK.framework" embed="true" custom="true" />
 		<source-file src="src/ios/SquareInAppPayments.swift" />
-		<!--
 		<source-file src="src/ios/ChargeAPI.swift" /> 
 		<source-file src="src/ios/Constants.swift" />
-		-->
 		<header-file src="src/ios/AppDelegate+Square.h" />
         <source-file src="src/ios/AppDelegate+Square.m" />
 	</platform>
