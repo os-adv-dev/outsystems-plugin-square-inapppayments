@@ -30,9 +30,9 @@ class SquareInAppPayments: CDVPlugin, SQIPCardEntryViewControllerDelegate {
         // Customize the card payment form
         let theme = SQIPTheme()
         theme.errorColor = .red
-        theme.tintColor = Color.primaryAction
+        theme.tintColor = UIColor.green //Color.primaryAction
         theme.keyboardAppearance = .light
-        theme.messageColor = Color.descriptionFont
+        theme.messageColor = UIColor.black //Color.descriptionFont
         theme.saveButtonTitle = "Pay"
 
         return SQIPCardEntryViewController(theme: theme)
