@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="outsystems-plugin-square-inapppayments" version="1.0"
+	xmlns="http://apache.org/cordova/ns/plugins/1.0"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>outsystems-plugin-square-inapppayments</name>
+	<js-module name="SquareInAppPayments" src="www/SquareInAppPayments.js">
+		<clobbers target="cordova.plugins.inapppayments" />
+	</js-module>
+
+	<!-- Apple Pay Input Variables -->
+	<preference name="MERCHANT_IDENTIFIER" default="MERCHANT_IDENTIFIER"/>
+	<preference name="COUNTRY_CODE" default="US" />
+	<preference name="CURRENCY_CODE" default="USD" />
+	
+	<!-- Square Input Variables -->
+	<preference name="SQUARE_LOCATION_ID" />
+	<preference name="APPLICATION_ID" />
+	<preference name="CHARGE_SERVER_HOST" />
+		
+	<platform name="ios">
+	<!--
+		<podspec>
+	      <pods use-frameworks="true">
+	        <pod name="SquareInAppPaymentsSDK" />
+	      </pods>
+	    </podspec>
+	-->
+
+		<!-- Hooks for Swift Support -->
+        <hook type="before_plugin_add" src="hooks/install_prerequisites.js"/>
+        <hook type="after_plugin_add" src="hooks/add_swift_support.js" />
+
+        <!-- Replace Square constants -->
+        <hook type="after_plugin_install" src="hooks/replace_constants.js" />
+
+		<config-file parent="/*" target="config.xml">
+			<feature name="SquareInAppPayments">
+				<param name="ios-package" value="SquareInAppPayments" />
+			</feature>
+		</config-file>
+		
+		<framework src="src/ios/framework/SquareInAppPaymentsSDK.framework" embed="true" custom="true" />
+		<source-file src="src/ios/SquareInAppPayments.swift" />
+		<!--
+		<source-file src="src/ios/ChargeAPI.swift" /> 
+		<source-file src="src/ios/Constants.swift" />
+		-->
+		<header-file src="src/ios/AppDelegate+Square.h" />
+        <source-file src="src/ios/AppDelegate+Square.m" />
+	</platform>
+</plugin>

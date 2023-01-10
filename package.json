@@ -1,0 +1,21 @@
+{
+  "name": "outsystems-plugin-square-inapppayments",
+  "version": "4.8.1",
+  "description": "Cordova Square In App Payments Plugin for iOS",
+  "cordova": {
+    "id": "outsystems-plugin-square-inapppayments",
+    "platforms": [
+      "ios"
+    ]
+  },
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andregrillo/outsystems-plugin-square-inapppayments"
+  },
+  "author": "André Grillo, OutSystems",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andregrillo/outsystems-plugin-square-inapppayments/issues"
+  },
+  "homepage": "https://github.com/andregrillo/outsystems-plugin-square-inapppayments#README"
+}
