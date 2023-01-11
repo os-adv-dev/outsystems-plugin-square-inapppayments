@@ -8,6 +8,7 @@
 import Foundation
 import SquareInAppPaymentsSDK
 
+@objc(SquareInAppPayments)
 class SquareInAppPayments: CDVPlugin, SQIPCardEntryViewControllerDelegate {
 
     var command = CDVInvokedUrlCommand()
