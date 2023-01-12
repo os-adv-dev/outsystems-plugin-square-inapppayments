@@ -17,26 +17,43 @@ class SquareInAppPayments: CDVPlugin, SQIPCardEntryViewControllerDelegate {
     @objc(payWithCard:)
     func payWithCard(_ command: CDVInvokedUrlCommand){
         self.command = command
-        let vc = self.makeCardEntryViewController()
-        vc.delegate = self
-        let nc = UINavigationController(rootViewController: vc)
-        nc.modalPresentationStyle = .fullScreen
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.viewController.present(nc, animated: true, completion: nil)
+        if let vc = self.makeCardEntryViewController(arguments: command.arguments) {
+            vc.delegate = self
+            let nc = UINavigationController(rootViewController: vc)
+            nc.modalPresentationStyle = .fullScreen
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.viewController.present(nc, animated: true, completion: nil)
+            }
+        } else {
+            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Invalid Parameters")
         }
     }
     
-    func makeCardEntryViewController() -> SQIPCardEntryViewController {
-        // Customize the card payment form
-        let theme = SQIPTheme()
-        theme.errorColor = .red
-        theme.tintColor = UIColor.green //Color.primaryAction
-        theme.keyboardAppearance = .light
-        theme.messageColor = UIColor.black //Color.descriptionFont
-        theme.saveButtonTitle = "Pay"
+    func makeCardEntryViewController(arguments: Array<Any>) -> SQIPCardEntryViewController? {
+        if arguments.count == 4 {
+            if let buttonCaption = command.arguments[0] as? String, let tintHexColor = command.arguments[1] as? String, let messageHexColor = command.arguments[2] as? String, let errorHexColor = command.arguments[3] as? String  {
+                if messageHexColor.isValidHexColor() && tintHexColor.isValidHexColor() && errorHexColor.isValidHexColor() {
+                    // Customize the card payment form
+                    let theme = SQIPTheme()
+                    theme.errorColor = UIColor(hexaString: errorHexColor)
+                    theme.tintColor = UIColor(hexaString: tintHexColor)
+                    theme.keyboardAppearance = .light
+                    theme.messageColor = UIColor(hexaString: messageHexColor)
+                    theme.saveButtonTitle = buttonCaption
 
-        return SQIPCardEntryViewController(theme: theme)
+                    return SQIPCardEntryViewController(theme: theme)
+                } else {
+                    self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Invalid Hexcolor")
+                }
+            } else {
+                self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Invalid Input Parameters")
+            }
+
+        } else {
+            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Incorrect number of input parameters")
+        }
+        return nil
     }
     
     func sendPluginResult(status: CDVCommandStatus, message: String) {
@@ -51,10 +68,6 @@ extension SquareInAppPayments {
     func cardEntryViewController(_ cardEntryViewController: SQIPCardEntryViewController, didObtain cardDetails: SQIPCardDetails, completionHandler: @escaping (Error?) -> Void) {
         print("⭐️ didObtain cardDetails ⭐️")
         
-        // Send card nonce to your server to store or charge the card.
-        // When a response is received, call completionHandler with `nil` for success,
-        // or an error to indicate failure.
-        
         self.viewController.dismiss(animated: true) {
             
             var returnArray: Array<String> = []
@@ -66,22 +79,15 @@ extension SquareInAppPayments {
             
             self.sendPluginResult(status: CDVCommandStatus_OK, message: "\(returnArray)")
         }
-        
     }
-    
-//    func cardEntryViewController(_ cardEntryViewController: SQIPCardEntryViewController, didObtain cardDetails: SQIPCardDetails) async throws {
-//
-//    }
     
     func cardEntryViewController(_ cardEntryViewController: SQIPCardEntryViewController, didCompleteWith status: SQIPCardEntryCompletionStatus) {
         print("⭐️ didCompleteWith status")
-        //  Handle backend results. If your backend processes the card with no error, call the completion handler with a single nil argument. A success animation is shown to the buyer and cardEntryViewController:didCompleteWithStatus: is called. At this point, you should dismiss the card entry view controller.
         
         DispatchQueue.main.async { [weak self] in
             cardEntryViewController.dismiss(animated: true) {
                 switch status {
                 case .canceled:
-                    //Devolver callback
                     print("⭐️ Cancelled")
                     self?.sendPluginResult(status: CDVCommandStatus_ERROR, message: "User Cancelled")
                     break
@@ -91,8 +97,28 @@ extension SquareInAppPayments {
                 }
             }
         }
-        
     }
-    
-    
+}
+
+
+extension UIColor {
+    convenience init(hexaString: String, alpha: CGFloat = 1) {
+        let chars = Array(hexaString.dropFirst())
+        self.init(red:   .init(strtoul(String(chars[0...1]),nil,16))/255,
+                  green: .init(strtoul(String(chars[2...3]),nil,16))/255,
+                  blue:  .init(strtoul(String(chars[4...5]),nil,16))/255,
+                  alpha: alpha)}
+}
+
+extension String {
+    func isValidHexColor() -> Bool {
+        guard let regex = try? NSRegularExpression(pattern: "^#(?:[0-9a-fA-F]{3}){1,2}$") else {
+            return false
+        }
+        let range = NSRange(location: 0, length: self.utf16.count)
+        if regex.firstMatch(in: self, options: [], range: range) != nil {
+            return true
+        }
+        return false
+    }
 }
