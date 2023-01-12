@@ -33,16 +33,21 @@ class SquareInAppPayments: CDVPlugin, SQIPCardEntryViewControllerDelegate {
     func makeCardEntryViewController(arguments: Array<Any>) -> SQIPCardEntryViewController? {
         if arguments.count == 4 {
             if let buttonCaption = command.arguments[0] as? String, let tintHexColor = command.arguments[1] as? String, let messageHexColor = command.arguments[2] as? String, let errorHexColor = command.arguments[3] as? String  {
-                if messageHexColor.isValidHexColor() && tintHexColor.isValidHexColor() && errorHexColor.isValidHexColor() && buttonCaption != "" {
-                    // Customize the card payment form
-                    let theme = SQIPTheme()
-                    theme.errorColor = UIColor(hexaString: errorHexColor)
-                    theme.tintColor = UIColor(hexaString: tintHexColor)
-                    theme.keyboardAppearance = .light
-                    theme.messageColor = UIColor(hexaString: messageHexColor)
-                    theme.saveButtonTitle = buttonCaption
+                if messageHexColor.isValidHexColor() && tintHexColor.isValidHexColor() && errorHexColor.isValidHexColor() {
+                    if buttonCaption != "" {
+                        // Customize the card payment form
+                        let theme = SQIPTheme()
+                        theme.errorColor = UIColor(hexaString: errorHexColor)
+                        theme.tintColor = UIColor(hexaString: tintHexColor)
+                        theme.keyboardAppearance = .light
+                        theme.messageColor = UIColor(hexaString: messageHexColor)
+                        theme.saveButtonTitle = buttonCaption
 
-                    return SQIPCardEntryViewController(theme: theme)
+                        return SQIPCardEntryViewController(theme: theme)
+                    } else {
+                        self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Invalid Button string")
+                    }
+                    
                 } else {
                     self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Invalid Hexcolor")
                 }
