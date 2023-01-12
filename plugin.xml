@@ -12,11 +12,11 @@
 		
 	<platform name="ios">
 		<!-- Hooks for Swift Support -->
-        <hook type="before_plugin_add" src="hooks/install_prerequisites.js"/>
-        <hook type="after_plugin_add" src="hooks/add_swift_support.js" />
+	        <hook type="before_plugin_add" src="hooks/install_prerequisites.js"/>
+        	<hook type="after_plugin_add" src="hooks/add_swift_support.js" />
 
-        <!-- Replace Square constants -->
-        <hook type="after_plugin_install" src="hooks/replace_app_id.js" />
+	        <!-- Replace Square constants -->
+        	<hook type="after_plugin_install" src="hooks/replace_app_id.js" />
 
 		<config-file parent="/*" target="config.xml">
 			<feature name="SquareInAppPayments">
@@ -27,6 +27,6 @@
 		<framework src="src/ios/framework/SquareInAppPaymentsSDK.framework" embed="true" custom="true" />
 		<source-file src="src/ios/SquareInAppPayments.swift" />
 		<header-file src="src/ios/AppDelegate+Square.h" />
-        <source-file src="src/ios/AppDelegate+Square.m" />
+        	<source-file src="src/ios/AppDelegate+Square.m" />
 	</platform>
 </plugin>
