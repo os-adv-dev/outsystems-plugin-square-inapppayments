@@ -27,6 +27,6 @@
 		<framework src="src/ios/framework/SquareInAppPaymentsSDK.framework" embed="true" custom="true" />
 		<source-file src="src/ios/SquareInAppPayments.swift" />
 		<header-file src="src/ios/AppDelegate+Square.h" />
-        <source-file src="src/ios/AppDelegate+Square.m" />
+        	<source-file src="src/ios/AppDelegate+Square.m" />
 	</platform>
 </plugin>
