@@ -33,7 +33,7 @@ class SquareInAppPayments: CDVPlugin, SQIPCardEntryViewControllerDelegate {
     func makeCardEntryViewController(arguments: Array<Any>) -> SQIPCardEntryViewController? {
         if arguments.count == 4 {
             if let buttonCaption = command.arguments[0] as? String, let tintHexColor = command.arguments[1] as? String, let messageHexColor = command.arguments[2] as? String, let errorHexColor = command.arguments[3] as? String  {
-                if messageHexColor.isValidHexColor() && tintHexColor.isValidHexColor() && errorHexColor.isValidHexColor() {
+                if messageHexColor.isValidHexColor() && tintHexColor.isValidHexColor() && errorHexColor.isValidHexColor() && buttonCaption != "" {
                     // Customize the card payment form
                     let theme = SQIPTheme()
                     theme.errorColor = UIColor(hexaString: errorHexColor)
